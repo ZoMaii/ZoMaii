@@ -25,10 +25,13 @@ My work Email: zomaii@maichc.club
 1. [Python_AI](https://github.com/ZoMaii/python_AI) - have some *BUG* or **SERIOUS** disputes.
 2. Some <u>Interesting idea</u> on "GitHub-Table"
 
-**join in the first line of the email.**
+**join in the title of the email.**
 ```
-# 
+# BUG or idea
 ![GitHub]
+
+# SERIOUS disputes.
+![Github]SERIOUS 
 ```
 
 ## &#x1F914; GitHib-Table
