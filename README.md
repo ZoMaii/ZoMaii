@@ -31,10 +31,10 @@ My work Email: zomaii@maichc.club
 ![GitHub]
 
 # SERIOUS disputes.
-![Github]SERIOUS 
+![GitHub]SERIOUS 
 ```
 
-## &#x1F914; GitHib-Table
+## &#x1F914; GitHub-Table
 |use|idea|
 |-|-|
 |C/Java|System-run [JVM,Object,Procedure,SQL]|
