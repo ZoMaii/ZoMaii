@@ -3,7 +3,8 @@
 :tag-survival_games: | :gamemod_survival: | :tag-build: | :tag-freebuild: | :tag-build_pvp: | :tag-free_to_play:
 
 > [!NOTICE]
-> The best experience is East Pacific only. The all connected players must be authenticated to Xbox Live.
+
+> The best experience is west Pacific only. The all connected players must be authenticated to Xbox Live.
 
 
 Welcome from play.maichc.club .Ready to explore a whole new game-life with new friends? Build your town and resist intrusion from other players.
@@ -11,10 +12,12 @@ Welcome from play.maichc.club .Ready to explore a whole new game-life with new f
 **Special warning: if you damage the facilities in the public area, will be kicked out of the game (or Block).**
 
 <u>*The nether*</u> and <u>*The end*</u> will automatically updated **EVERY TWO MONTHS**.
+
 <u>*The world*</u> will be reset **every six months**.
 
 
 report mail-box: zomaii@maichc.club
+
 After inputed "[MCBE]report" on mail's title,i can see this mail.
 
 #### Some info of the game:
