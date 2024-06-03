@@ -17,7 +17,7 @@ My work Email: zomaii@maichc.club
 
 1. 简体/繁體 中文，优先级最高，请尽量使用 对zoho 有投递优化的线路发送邮件
 2. English,Reply via Google Mail.
-3. 日本語 &#x1F914;<sub>僕の日本語はへただから、使い方がふなれであります．済みません．</sub>
+3. 日本語 &#x1F914;<sub>僕の日本語はへただから、使い方がふなれであります、不自然な日本語もある．済みません．</sub>
 
 ## :page_with_curl: The rules for sending emails to me
 
