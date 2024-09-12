@@ -7,7 +7,7 @@
 メインサーバーは東京に委託で运転してあります．しかし、イーサネットと、上海で接続します．「テストで今は５４－６０、LIFE BOAT:118」
 
 #### チートに通報のメール書き方
-mail to zomaii@maichc.club
+mail to teacups@maichc.club
 <pre>
                     SPACE<|>INPUT THE REASON
 Mail-title:[MCBE]report     xxはチートしで、いろいろをもる
