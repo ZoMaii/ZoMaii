@@ -35,7 +35,7 @@ AN MINECRAFT:BEDROCK SERVER ON ASIA
 
 > 我们不会主动介入干扰游戏进程，若遇见游戏管理员主动干涉导致成就无法获取、你的游戏体验变糟糕。请与我们取得联系！
 
-举报邮箱：zomaii@maichc.club
+举报邮箱：teacups@maichc.club
 
 举报邮件的标题(必须写在邮件标题第一项，否则会被拒收)：[MCBE]report
 
