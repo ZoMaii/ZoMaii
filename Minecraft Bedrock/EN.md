@@ -16,7 +16,7 @@ Welcome from play.maichc.club .Ready to explore a whole new game-life with new f
 <u>*The world*</u> will be reset **every six months**.
 
 
-report mail-box: zomaii@maichc.club
+report mail-box: teacups@maichc.club
 
 After inputed "[MCBE]report" on mail's title,i can see this mail.
 
