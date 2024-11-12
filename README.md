@@ -10,7 +10,11 @@ I don't look at work emails every day. I only select emails that interest me eve
 
 1. 简体/繁體 中文，优先级最高，请尽量使用 对zoho 有投递优化的线路发送邮件
 2. English,Reply via Google Mail.
+<<<<<<< HEAD
 3. 日本語 🫠<sub>僕の日本語は下手なので、使い方に慣れていなかったり、不自然な表現があったりするかもしれません.すみません．</sub>
+=======
+3. 日本語 &#x1F914;<sub>僕の日本語はへたから、使い方がふなれであります、不自然な日本語もある．済みません．</sub>
+>>>>>>> 79001c2d4bc28cd64132498551b4652038531d52
 
 ## :page_with_curl: The rules for sending emails to me
 
@@ -43,4 +47,9 @@ Let's play a game together! What games we have? [Look here](./play.maichc.club/)
 ---
 **Thank you for your understanding and support.**
 
+<<<<<<< HEAD
 2024.11 - ZoMaii
+=======
+2024.5
+ZoMaii
+>>>>>>> 79001c2d4bc28cd64132498551b4652038531d52
