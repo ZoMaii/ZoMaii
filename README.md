@@ -1,29 +1,23 @@
 # Welcome From ZoMaii! &#x1F973;
 
-**This is my home page on Github.If you have ideas that illustrate something interesting, feel free to contact me!**
+**This is my home page on Github.If you have good ideas or would like to collaborate with me , contact me!**
 
-I don't look at work emails every day. I only select emails that interest me every Sunday, but <mark>emergency emails</mark> are answered within 24 hours.
-
-more info.Check to ***The rules for sending emails to me***
-
-## :speech_balloon:The language I understand is: 
-
-中文(简体、繁體)、 日本語(ｎ３、授業している)、English(us)
-
-My work Email: zomaii@maichc.club
+I don't look at work emails every day. I only select emails that interest me every Sunday.
 
 
 ## :incoming_envelope: Reply level (Work email):
+:speech_balloon: My work Email: [zomaii@maichc.club](mailto:zomaii@maichc.club)
 
 1. 简体/繁體 中文，优先级最高，请尽量使用 对zoho 有投递优化的线路发送邮件
 2. English,Reply via Google Mail.
-3. 日本語 &#x1F914;<sub>僕の日本語はへただから、使い方がふなれであります、不自然な日本語もある．済みません．</sub>
+3. 日本語 🫠<sub>僕の日本語は下手なので、使い方に慣れていなかったり、不自然な表現があったりするかもしれません.すみません．</sub>
 
 ## :page_with_curl: The rules for sending emails to me
 
-&#x1F6D1; If you want to contact me through your work e-mail, please observe the **following rules**, otherwise the server will block the mail reception!
-1. [Python_AI](https://github.com/ZoMaii/python_AI) - have some *BUG* or **SERIOUS** disputes.
-2. Some <u>Interesting idea</u> on "GitHub-Table"
+> [!IMPORTANT]
+> If you want to contact me through your work e-mail, please observe the **following rules**, otherwise the server will block the mail reception!
+>
+> At all times, discussions unrelated to technology will be considered **SERIOUS DISPUTES**.
 
 **join in the title of the email.**
 ```
@@ -34,14 +28,19 @@ My work Email: zomaii@maichc.club
 ![GitHub]SERIOUS 
 ```
 
-## &#x1F914; GitHub-Table
-|use|idea|
-|-|-|
-|C/Java|System-run [JVM,Object,Procedure,SQL]|
-|Python|tag-Cloud [Vector,magnitude]|
+## &#x1F914; My Focus
+|status|title|description|
+|-|-|-|
+|🏗️ In progress|getN|A hard disk partitioning and file organizing system|
+|👀 Program testing |[md-maic](https://github.com/ZoMaii/md-maic)|A dialect tool of markdown on vscode|
+
+## 🎮️Play Game!
+
+Let's play a game together! What games we have? [Look here](./play.maichc.club/)!
+
+🔗 Connecting to the server: `play.maichc.club`
 
 ---
 **Thank you for your understanding and support.**
 
-2024.5
-ZoMaii
+2024.11 - ZoMaii
