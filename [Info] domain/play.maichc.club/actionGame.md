@@ -10,13 +10,14 @@
 
 主订阅地址是:
 ```
-https://maicx.net/gameAction.xml
+# 支持将于 2026年2月结束，请及时切换到 maichc.club!
+https://maicx.net/rss.xml
 ```
 
 # 🗳️ 如何参与活动游戏？
 1. 如果您希望游玩某个活动游戏，请直接访问以下地址，寻找是否有对应的markdown文件！：
 ```
-https://github.com/zomaii/zomaii/play.maichc.club/
+https://github.com/ZoMaii/ZoMaii/blob/main/%5BInfo%5D%20domain/play.maichc.club/actionGame.md
 ```
 
 2. 如果你希望参与投票，请关注我们的动态！

@@ -9,7 +9,7 @@ I don't look at work emails every day. I only select emails that interest me eve
 :speech_balloon: My work Email: [zomaii@maichc.club](mailto:zomaii@maichc.club)
 
 1. 简体/繁體 中文，优先级最高，请尽量使用 对zoho 有投递优化的线路发送邮件
-2. English,Reply via Google Mail.
+2. English,Reply via Maichc Mail.
 3. 日本語 🫠<sub>僕の日本語は下手なので、使い方に慣れていなかったり、不自然な表現があったりするかもしれません.すみません．</sub>
 
 
@@ -36,7 +36,7 @@ I don't look at work emails every day. I only select emails that interest me eve
 
 ## 🎮️Play Game!
 
-Let's play a game together! What games we have? [Look here](./play.maichc.club/)!
+Let's play a game together! What games we have? [Look here](./[Info]%20domain/play.maichc.club/)!
 
 🔗 Connecting to the server: `play.maichc.club`
 
