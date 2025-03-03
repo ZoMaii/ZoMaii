@@ -32,7 +32,6 @@ I don't look at work emails every day. I only select emails that interest me eve
 ## &#x1F914; My Focus
 |status|title|description|
 |-|-|-|
-|🏗️ In progress|getN|A hard disk partitioning and file organizing system|
 |👀 Program testing |[md-maic](https://github.com/ZoMaii/md-maic)|A dialect tool of markdown on vscode|
 
 ## 🎮️Play Game!

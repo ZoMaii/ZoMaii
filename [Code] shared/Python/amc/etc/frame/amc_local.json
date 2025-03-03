@@ -1,0 +1,29 @@
+{
+    "config":{
+        "profile":"_tmp",
+        "work":"config",
+        "power":"send",
+        "rc-mod":false,
+        "tag-cloud":true
+    },
+
+    "nets":{
+        "agree":"www",
+        "start":"127.0.0.1",
+        "work":"http/https",
+        "port":25016,
+        "type":"NS"
+    },
+
+    "pack":[
+        {"id":0,"link":""}
+    ],
+
+    "env-rc":[{}],
+    "sp-rc":[{}],
+
+    "tag-cloud":[
+        {"space":"center","x":0,"y":0},
+        {"id":0,"name":"${tage}","x":0,"y":0}
+    ]
+}

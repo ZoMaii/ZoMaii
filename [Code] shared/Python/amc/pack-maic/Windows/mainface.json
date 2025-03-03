@@ -1,0 +1,13 @@
+{
+    "format_version":1,
+    "mainface":{
+        "name":"Stream.py",
+        "uuid":"FFB0AFF3-5261-CF51-D426-ADC166862837",
+        "version":[0,0,1]
+    },
+    "script":{
+        "name":"windows",
+        "uuid":"FFB0AFF3-5261-CF51-D426-ADC166862837",
+        "version":[0,0,1]
+    }
+}
