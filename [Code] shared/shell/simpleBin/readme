@@ -1,0 +1,5 @@
+必须包含以下内容
+
+drwxr_xr_x simpleBin
+drwxr_xr_x src
+_rwxr_xr_x src/main.c
