@@ -1,5 +1,3 @@
-// æ³¨ï¼šå¤§éƒ¨åˆ†è®¾å¤‡(BT 5.0)éƒ½æ˜¯å«æœ‰SPPæœåŠ¡çš„ï¼Œä½†ç»ˆç«¯è®¾å¤‡å¯èƒ½ä¸ä¼šç›´æ¥æä¾›SPPæœåŠ¡
-// æ­¤é€šç”¨åŠŸèƒ½ä¸æ„å‘³ç€èƒ½å¤Ÿç›´æ¥åœ¨ å®é™…ç¯å¢ƒ ä¸­è¿è¡Œï¼Œå…·ä½“å–å†³äºè®¾å¤‡çš„å®ç°å’Œé…ç½®
 #define WIN32_LEAN_AND_MEAN
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 
@@ -13,26 +11,26 @@
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "Bthprops.lib")
 
-// å‰å‘å£°æ˜
+// Ç°ÏòÉùÃ÷
 int GetRfcommPort(ULONGLONG btAddr, const GUID& uuid);
 
 int wmain(int argc, wchar_t* argv[]) {
     if (argc != 3) {
-        wprintf(L"Usage: %s <DeviceName> <Message>\n", argv[0]);
+        printf("ÓÃ·¨: %S <ĞÅÈÎµÄÀ¶ÑÀÉè±¸Ãû> <ÏûÏ¢>\n", argv[0]);
         return 1;
     }
 
-    // æ¶ˆæ¯è½¬æ¢
+    // ÏûÏ¢×ª»»
     const int msgLen = WideCharToMultiByte(CP_UTF8, 0, argv[2], -1, NULL, 0, NULL, NULL);
     char* message = (char*)malloc(msgLen);
     WideCharToMultiByte(CP_UTF8, 0, argv[2], -1, message, msgLen, NULL, NULL);
 
-    // è®¾å¤‡æœç´¢
+    // Éè±¸ËÑË÷
     BLUETOOTH_DEVICE_SEARCH_PARAMS searchParams = {
         sizeof(BLUETOOTH_DEVICE_SEARCH_PARAMS),
-        1,  // è¿”å›æ‰€æœ‰å·²è®¤è¯è®¾å¤‡
-        TRUE, TRUE, FALSE, TRUE,  // è¿‡æ»¤æ¡ä»¶
-        TRUE,  // å‘èµ·ä¸»åŠ¨æœç´¢
+        1,  // ·µ»ØËùÓĞÒÑÈÏÖ¤Éè±¸
+        TRUE, TRUE, FALSE, TRUE,  // ¹ıÂËÌõ¼ş
+        TRUE,  // ·¢ÆğÖ÷¶¯ËÑË÷
     };
 
     BLUETOOTH_DEVICE_INFO deviceInfo = { sizeof(BLUETOOTH_DEVICE_INFO) };
@@ -50,63 +48,63 @@ int wmain(int argc, wchar_t* argv[]) {
     }
 
     if (targetAddr == 0) {
-        wprintf(L"Device not found\n");
+        printf("ÎŞ·¨ÕÒµ½ÒÑĞÅÈÎµÄÀ¶ÑÀÉè±¸\n");
         free(message);
         return 1;
     }
 
-    // è·å–ç«¯å£
+    // »ñÈ¡¶Ë¿Ú
     const int port = GetRfcommPort(targetAddr, SerialPortServiceClass_UUID);
     if (port <= 0) {
-        wprintf(L"SPP service not found\n");
+        printf("¶ÔÓ¦Éè±¸µÄ SPP ·şÎñÎ´ÕÒµ½\n");
         free(message);
         return 1;
     }
 
-    // Winsockåˆå§‹åŒ–
+    // Winsock³õÊ¼»¯
     WSADATA wsaData;
     WSAStartup(MAKEWORD(2, 2), &wsaData);
 
-    // åˆ›å»ºå¹¶è¿æ¥Socket
+    // ´´½¨²¢Á¬½ÓSocket
     SOCKET btSocket = socket(AF_BTH, SOCK_STREAM, BTHPROTO_RFCOMM);
     SOCKADDR_BTH addr = {
         AF_BTH,
         targetAddr,
-        (ULONG)port,  // æ˜¾å¼ç±»å‹è½¬æ¢
+        (ULONG)port,  // ÏÔÊ½ÀàĞÍ×ª»»
         0
     };
 
     if (connect(btSocket, (SOCKADDR*)&addr, sizeof(addr)) != 0) {
-        wprintf(L"Connect failed: %d\n", WSAGetLastError());
+        printf("Á¬½ÓÊ§°Ü: %d\n", WSAGetLastError());
         closesocket(btSocket);
         WSACleanup();
         free(message);
         return 1;
     }
 
-    // å‘é€æ•°æ®
+    // ·¢ËÍÊı¾İ
     const int totalSent = send(btSocket, message, (int)strlen(message), 0);
     if (totalSent == SOCKET_ERROR) {
-        wprintf(L"Send failed: %d\n", WSAGetLastError());
+        printf("·¢ËÍÊ§°Ü: %d\n", WSAGetLastError());
     }
     else {
-        wprintf(L"Sent %d bytes\n", totalSent);
+        printf("·¢ËÍ %d ×Ö½Ú(bytes)\n", totalSent);
     }
 
-    // æ¸…ç†èµ„æº
+    // ÇåÀí×ÊÔ´
     closesocket(btSocket);
     WSACleanup();
     free(message);
     return 0;
 }
 
-// ä¿®æ­£åçš„ç«¯å£æŸ¥è¯¢å‡½æ•°
+// ĞŞÕıºóµÄ¶Ë¿Ú²éÑ¯º¯Êı
 int GetRfcommPort(ULONGLONG btAddr, const GUID& uuid) {
     WSAQUERYSETW querySet = { sizeof(WSAQUERYSETW) };
     querySet.dwNameSpace = NS_BTH;
     querySet.lpServiceClassId = const_cast<GUID*>(&uuid);
 
-    // æ­£ç¡®è®¾ç½®è“ç‰™åœ°å€
+    // ÕıÈ·ÉèÖÃÀ¶ÑÀµØÖ·
     BTH_ADDR bthAddr = btAddr;
     querySet.lpszContext = (LPWSTR)&bthAddr;
 
