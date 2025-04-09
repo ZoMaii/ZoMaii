@@ -1,4 +1,4 @@
-
+// gcc BT_BLE_LINUX_TEST.c -o ble -std=c99 -lgattlib
 // gattlib 须在 github 中克隆仓库 https://github.com/labapart/gattlib/tree/0.7.2
 // cmake , make install , /etc/ld.so.conf.d/*.conf , ldconfig
 #include <stdio.h>
