@@ -1,4 +1,4 @@
-
+// 编译命令: gcc BT_SCANNER_LINUX.c -std=c99 -lbluetooth
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
