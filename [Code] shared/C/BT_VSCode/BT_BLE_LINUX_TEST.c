@@ -8,8 +8,8 @@
 #include <getopt.h>
 #include <gattlib.h>
 
-#define SERVICE_UUID        "0000180f-0000-1000-8000-00805f9b34fb"
-#define CHARACTERISTIC_UUID "00002a19-0000-1000-8000-00805f9b34fb"
+#define SERVICE_UUID        "180f"
+#define CHARACTERISTIC_UUID "2a19"
 
 // 全局变量，用于异步回调中保存连接
 static gattlib_connection_t* g_connection = NULL;
