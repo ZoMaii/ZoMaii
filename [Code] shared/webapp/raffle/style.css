@@ -1,0 +1,125 @@
+body {
+    background: #2c3e50;
+    color: #ecf0f1;
+    font-family: 'Microsoft YaHei', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.container {
+    background: #34495e;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+h1 {
+    color: #e74c3c;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    margin-bottom: 15px;
+}
+
+h2 {
+    line-height: 1.6;
+    font-size: 1rem;
+    max-width: 100%;
+    margin-bottom: 20px;
+}
+
+button {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1em;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-top: 20px;
+}
+
+button:hover {
+    background: #c0392b;
+    transform: scale(1.05);
+}
+
+button:disabled {
+    background: #7f8c8d;
+    cursor: not-allowed;
+}
+
+.probability {
+    margin-top: 20px;
+    color: #bdc3c7;
+    font-size: 0.95em;
+}
+
+ul#content {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 10px;
+    margin: 20px auto;
+    padding: 0;
+    width: 100%;
+    max-width: 300px;
+    list-style: none;
+}
+
+ul#content li {
+    background: #2c3e50;
+    border: 1px solid #f60;
+    padding: 10px;
+    text-align: center;
+    font-size: 0.9em;
+    border-radius: 8px;
+    line-height: 1.4em;
+    box-sizing: border-box;
+}
+
+ul#content li.current {
+    background: #090;
+    color: #fff;
+    font-weight: bold;
+}
+
+/* Mobile specific enhancements */
+@media (max-width: 600px) {
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.4em;
+    }
+
+    h2 {
+        font-size: 0.95em;
+    }
+
+    button {
+        width: 100%;
+        font-size: 1em;
+        padding: 12px;
+    }
+
+    ul#content {
+        max-width: 100%;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    ul#content li {
+        font-size: 0.85em;
+        padding: 8px;
+    }
+}
