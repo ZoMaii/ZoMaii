@@ -54,12 +54,14 @@ document.getElementById('start').addEventListener('click', function() {
     interval = setInterval(function() {
         if(remain < 200){
             runner = false;
+            document.getElementById('whois').innerText = list[index].innerText;
             alert('🎉 抽中了：'+list[index].innerText);
             clearInterval(interval);
         }else{
             list[index].className = '';
             list[(index+1) % len].className = 'current';
             index = ++index % len;
+            document.getElementById('whois').innerText = list[index].innerText;
             remain -= 100;
         }
     },100);
