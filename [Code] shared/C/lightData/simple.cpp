@@ -9,12 +9,12 @@
 #include <unistd.h>
 #endif
 
-// ��ȫ�� UTF-8 �����������ƽ̨�꣩
+// 安全的 UTF-8 输出函数（含平台宏）
 static void safe_print_utf8(const char* str) {
     if (!str) return;
 
 #ifdef _WIN32
-    // ת��Ϊ���ַ����
+    // 转换为宽字符输出
     int wlen = MultiByteToWideChar(CP_UTF8, 0, str, -1, NULL, 0);
     if (wlen > 0) {
         wchar_t* wstr = (wchar_t*)malloc(wlen * sizeof(wchar_t));
@@ -26,11 +26,11 @@ static void safe_print_utf8(const char* str) {
         }
     }
 #endif
-    // ���˷���
+    // 回退方案
     printf("%s", str);
 }
 
-// ��ӡ�������������
+// 打印配置项（带索引）
 static void print_config_item(size_t index, const char* key, const char* value) {
     printf("  [%zu] ", index);
     safe_print_utf8(key);
@@ -40,65 +40,65 @@ static void print_config_item(size_t index, const char* key, const char* value) 
 }
 
 int simple() {
-    // ���ÿ���̨֧�� UTF-8
+    // 设置控制台支持 UTF-8
 #ifdef _WIN32
-    // ���ÿ���̨���Ϊ UTF-8
+    // 设置控制台输出为 UTF-8
     SetConsoleOutputCP(CP_UTF8);
-    // ���ÿ���̨����Ϊ UTF-8
+    // 设置控制台输入为 UTF-8
     SetConsoleCP(CP_UTF8);
 
-    // ���ÿ���̨����֧������
+    // 设置控制台字体支持中文
     CONSOLE_FONT_INFOEX font = { sizeof(font) };
     font.dwFontSize.Y = 16;
-    wcscpy_s(font.FaceName, LF_FACESIZE, L"SimSun-ExtB"); // ʹ��֧�����ĵ�����
+    wcscpy_s(font.FaceName, LF_FACESIZE, L"SimSun-ExtB"); // 使用支持中文的字体
     SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &font);
 #else
-    // �� Linux/macOS ������ UTF-8 ����
+    // 在 Linux/macOS 上设置 UTF-8 环境
     setenv("LC_ALL", "en_US.UTF-8", 1);
 #endif
 
-    // ���ñ��ػ�
+    // 设置本地化
     setlocale(LC_ALL, "zh_CN.UTF-8");
 
-    wprintf(L"=== �����ļ���ֵ��ȡʾ�� ===\n\n");
+    wprintf(L"=== 配置文件键值获取示例 ===\n\n");
 
     const char* filename = "test.txt";
 
-    // 1. �����ļ�������
+    // 1. 创建文件锁对象
     FileLock* lock = file_lock_create(filename);
     if (!lock) {
-        wprintf(L"�����ļ���ʧ��\n");
+        wprintf(L"创建文件锁失败\n");
         return 1;
     }
-    wprintf(L"�Ѵ����ļ���: %hs\n", filename);
+    wprintf(L"已创建文件锁: %hs\n", filename);
 
-    // 2. �����ļ�
+    // 2. 锁定文件
     if (file_lock(lock) != 0) {
-        wprintf(L"�ļ�����ʧ��\n");
+        wprintf(L"文件锁定失败\n");
         file_lock_destroy(lock);
         return 1;
     }
-    wprintf(L"�ļ�������\n");
+    wprintf(L"文件已锁定\n");
 
-    // 3. ��ȡ�ļ�����
+    // 3. 读取文件内容
     char* content = file_read_content(lock);
     if (!content) {
-        wprintf(L"��ȡ�ļ�����ʧ��\n");
+        wprintf(L"读取文件内容失败\n");
         file_unlock(lock);
         file_lock_destroy(lock);
         return 1;
     }
 
-    wprintf(L"\n=== �ļ�ԭʼ���� ===\n");
+    wprintf(L"\n=== 文件原始内容 ===\n");
     safe_print_utf8(content);
     wprintf(L"\n=====================\n");
 
-    // 4. ��������
+    // 4. 解析配置
     Config config;
     config_init(&config);
 
     if (!config_parse(&config, content)) {
-        wprintf(L"���������ļ�ʧ��\n");
+        wprintf(L"解析配置文件失败\n");
         free(content);
         config_free(&config);
         file_unlock(lock);
@@ -107,20 +107,20 @@ int simple() {
     }
     free(content);
 
-    // 5. ��ȡ����ӡ���м�ֵ��
-    wprintf(L"\n=== ������� (�� %zu ����ֵ��) ===\n", config.count);
+    // 5. 获取并打印所有键值对
+    wprintf(L"\n=== 解析结果 (共 %zu 个键值对) ===\n", config.count);
     for (size_t i = 0; i < config.count; i++) {
         print_config_item(i + 1, config.pairs[i].key, config.pairs[i].value);
     }
     wprintf(L"===============================\n");
 
-    // 6. ���ҵ�����ֵ�ԣ�խ�ַ���
-    wprintf(L"\n=== ���ҵ�����ֵ�� (խ�ַ�) ===\n");
+    // 6. 查找单个键值对（窄字符）
+    wprintf(L"\n=== 查找单个键值对 (窄字符) ===\n");
 
-    // ����Ҫ���ҵļ��б�
+    // 定义要查找的键列表
     const char* keys_to_find[] = {
-        "Ӧ������", "�汾", "����", "·��", "˵��",
-        "������ֵ", "���ù���", "���������", "�����ڵļ�"
+        "应用名称", "版本", "语言", "路径", "说明",
+        "多语言值", "启用功能", "最大连接数", "不存在的键"
     };
 
     for (size_t i = 0; i < sizeof(keys_to_find) / sizeof(keys_to_find[0]); i++) {
@@ -128,24 +128,24 @@ int simple() {
         const char* value = config_get_value(&config, key);
 
         if (value) {
-            wprintf(L"  �ҵ��� '");
+            wprintf(L"  找到键 '");
             safe_print_utf8(key);
-            wprintf(L"' ��ֵ: '");
+            wprintf(L"' 的值: '");
             safe_print_utf8(value);
             wprintf(L"'\n");
         }
         else {
-            wprintf(L"  δ�ҵ��� '");
+            wprintf(L"  未找到键 '");
             safe_print_utf8(key);
             wprintf(L"'\n");
         }
     }
 
-    // 7. ���ҵ�����ֵ�ԣ����ַ���
-    wprintf(L"\n=== ���ҵ�����ֵ�� (���ַ�) ===\n");
+    // 7. 查找单个键值对（宽字符）
+    wprintf(L"\n=== 查找单个键值对 (宽字符) ===\n");
     const wchar_t* wide_keys[] = {
-        L"Ӧ������", L"�汾", L"����", L"·��", L"˵��",
-        L"������ֵ", L"���ù���", L"���������", L"�����ڵļ�"
+        L"应用名称", L"版本", L"语言", L"路径", L"说明",
+        L"多语言值", L"启用功能", L"最大连接数", L"不存在的键"
     };
 
     for (size_t i = 0; i < sizeof(wide_keys) / sizeof(wide_keys[0]); i++) {
@@ -153,58 +153,58 @@ int simple() {
         const wchar_t* value = wchart_config_get_value(&config, key);
 
         if (value) {
-            wprintf(L"  �ҵ��� '%s' ��ֵ: '%s'\n", key, value);
-            free((void*)value); // �ͷſ��ַ���ѯ���ص��ڴ�
+            wprintf(L"  找到键 '%s' 的值: '%s'\n", key, value);
+            free((void*)value); // 释放宽字符查询返回的内存
         }
         else {
-            wprintf(L"  δ�ҵ��� '%s'\n", key);
+            wprintf(L"  未找到键 '%s'\n", key);
         }
     }
 
-    // 8. ���Ҳ��޸ļ�ֵ
-    wprintf(L"\n=== ���Ҳ��޸ļ�ֵ ===\n");
-    const wchar_t* key_to_modify = L"���������";
+    // 8. 查找并修改键值
+    wprintf(L"\n=== 查找并修改键值 ===\n");
+    const wchar_t* key_to_modify = L"最大连接数";
     const wchar_t* old_value = wchart_config_get_value(&config, key_to_modify);
 
     if (old_value) {
-        wprintf(L"  �� '%s' �ĵ�ǰֵ: %s\n", key_to_modify, old_value);
+        wprintf(L"  键 '%s' 的当前值: %s\n", key_to_modify, old_value);
 
-        // �޸�ֵ��ʵ��Ӧ���п��ܴ��û������ȡ��
+        // 修改值（实际应用中可能从用户输入获取）
         wchar_t new_value[50];
         wchar_t* end;
         long int_value = wcstol(old_value, &end, 10);
 
-        if (*end == L'\0') { // ȷ�������ַ�������ת��
+        if (*end == L'\0') { // 确保整个字符串都被转换
             swprintf(new_value, sizeof(new_value) / sizeof(wchar_t), L"%ld", int_value + 10);
-            wprintf(L"  ������ֵ: %s\n", new_value);
+            wprintf(L"  建议新值: %s\n", new_value);
 
-            // ��ʵ��Ӧ���У�����Ὣ�޸�д������
-            // ���磺�޸������ļ����ݲ�д��
+            // 在实际应用中，这里会将修改写回配置
+            // 例如：修改配置文件内容并写回
             //file_write_content(lock, new_content);
         }
         else {
-            wprintf(L"  �޷�������ֵ\n");
+            wprintf(L"  无法解析数值\n");
         }
 
-        free((void*)old_value); // �ͷſ��ַ���ѯ���ص��ڴ�
+        free((void*)old_value); // 释放宽字符查询返回的内存
     }
     else {
-        wprintf(L"  �Ҳ����� '%s', �޷��޸�\n", key_to_modify);
+        wprintf(L"  找不到键 '%s', 无法修改\n", key_to_modify);
     }
 
-    // 9. ������Դ
+    // 9. 清理资源
     config_free(&config);
 
-    // 10. �����ļ�
+    // 10. 解锁文件
     if (file_unlock(lock) != 0) {
-        wprintf(L"�ļ�����ʧ��\n");
+        wprintf(L"文件解锁失败\n");
     }
     else {
-        wprintf(L"\n�ļ��ѽ���\n");
+        wprintf(L"\n文件已解锁\n");
     }
 
     file_lock_destroy(lock);
 
-    wprintf(L"\n�������\n");
+    wprintf(L"\n程序结束\n");
     return 0;
 }

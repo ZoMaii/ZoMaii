@@ -11,7 +11,7 @@
 #include <wchar.h>
 #include <locale.h>
 
-// ��ƽ̨�ļ�����֧��
+// 跨平台文件锁定支持
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -24,7 +24,7 @@ typedef HANDLE FileHandle;
 typedef int FileHandle;
 #endif
 
-// ��������
+// 错误处理宏
 #ifdef _WIN32
 #define PRINT_ERROR(msg) do { \
     fprintf(stderr, "%s (Error %lu)\n", msg, GetLastError()); \
@@ -35,40 +35,40 @@ typedef int FileHandle;
 } while(0)
 #endif
 
-// ��ֵ�Խṹ
+// 键值对结构
 typedef struct {
-    char* key;      // UTF-8�������
-    char* value;    // UTF-8����ֵ
+    char* key;      // UTF-8编码键名
+    char* value;    // UTF-8编码值
 } KeyValuePair;
 
-// ���ý������
+// 配置解析结果
 typedef struct {
-    KeyValuePair* pairs;    // ��ֵ������
-    size_t count;           // ��ֵ������
-    size_t capacity;        // ��������
+    KeyValuePair* pairs;    // 键值对数组
+    size_t count;           // 键值对数量
+    size_t capacity;        // 数组容量
 } Config;
 
-// �ļ����ṹ
+// 文件锁结构
 typedef struct {
-    FileHandle handle;      // �ļ����
-    char* file_path;        // �ļ�·��
-    int is_locked;          // ����״̬��־
+    FileHandle handle;      // 文件句柄
+    char* file_path;        // 文件路径
+    int is_locked;          // 锁定状态标志
 #ifdef _WIN32
-    OVERLAPPED lock_region; // Windowsר����������
+    OVERLAPPED lock_region; // Windows专用锁定区域
 #endif
 } FileLock;
 
-// ��ʼ����
+// 初始容量
 #define INITIAL_CAPACITY 16
 
-// ================== �������� ==================
+// ================== 函数声明 ==================
 void config_init(Config* config);
 void config_free(Config* config);
 int config_parse(Config* config, const char* content);
 const char* config_get_value(const Config* config, const char* key);
 char* config_serialize(const Config* config);
 
-// �������ַ���ѯ����
+// 新增宽字符查询函数
 const wchar_t* wchart_config_get_value(const Config* config, const wchar_t* key);
 
 FileLock* file_lock_create(const char* file_path);
@@ -78,9 +78,9 @@ void file_lock_destroy(FileLock* lock);
 char* file_read_content(FileLock* lock);
 int file_write_content(FileLock* lock, const char* content);
 
-// ================== ��ƽ̨�������� ==================
+// ================== 跨平台辅助函数 ==================
 
-// ��ȫ���ַ������ƺ��� (���strdup)
+// 安全的字符串复制函数 (替代strdup)
 static char* safe_strdup(const char* str) {
     if (!str) return NULL;
 
@@ -92,7 +92,7 @@ static char* safe_strdup(const char* str) {
     return copy;
 }
 
-// ��ƽ̨��ȫ���ַ����ָ��
+// 跨平台安全的字符串分割函数
 static char* safe_strtok(char* str, const char* delimiters, char** saveptr) {
 #ifdef _WIN32
     return strtok_s(str, delimiters, saveptr);
@@ -101,46 +101,46 @@ static char* safe_strtok(char* str, const char* delimiters, char** saveptr) {
 #endif
 }
 
-// ================== ���ַ��������� ==================
+// ================== 宽字符辅助函数 ==================
 
-// ��ȫ�Ķ��ֽ�ת���ַ�����
+// 安全的多字节转宽字符函数
 static int safe_mbstowcs(wchar_t* wcstr, size_t sizeInWords, const char* mbstr, size_t count) {
 #ifdef _WIN32
-    // ʹ��Windows��ȫ�汾
+    // 使用Windows安全版本
     return mbstowcs_s(NULL, wcstr, sizeInWords, mbstr, count) == 0 ? 0 : -1;
 #else
-    // ��Windowsƽ̨ʹ�ñ�׼����
+    // 非Windows平台使用标准函数
     size_t result = mbstowcs(wcstr, mbstr, sizeInWords);
     return (result == (size_t)-1) ? -1 : 0;
 #endif
 }
 
-// ��ȫ�Ŀ��ַ�ת���ֽں���
+// 安全的宽字符转多字节函数
 static int safe_wcstombs(char* mbstr, size_t sizeInBytes, const wchar_t* wcstr, size_t count) {
 #ifdef _WIN32
-    // ʹ��Windows��ȫ�汾
+    // 使用Windows安全版本
     return wcstombs_s(NULL, mbstr, sizeInBytes, wcstr, count) == 0 ? 0 : -1;
 #else
-    // ��Windowsƽ̨ʹ�ñ�׼����
+    // 非Windows平台使用标准函数
     size_t result = wcstombs(mbstr, wcstr, sizeInBytes);
     return (result == (size_t)-1) ? -1 : 0;
 #endif
 }
 
-// խ�ַ�ת���ַ� (UTF-8 -> wchar_t)
+// 窄字符转宽字符 (UTF-8 -> wchar_t)
 static wchar_t* narrow_to_wide(const char* narrow) {
     if (!narrow) return NULL;
 
-    // ���浱ǰlocale
+    // 保存当前locale
     char* old_locale = _strdup(setlocale(LC_CTYPE, NULL));
     if (!old_locale) return NULL;
 
-    // ����UTF-8 locale
+    // 设置UTF-8 locale
     if (!setlocale(LC_CTYPE, "en_US.UTF-8")) {
         setlocale(LC_CTYPE, "");
     }
 
-    // �������賤��
+    // 计算所需长度
     size_t len = 0;
 #ifdef _WIN32
     errno_t err = mbstowcs_s(&len, NULL, 0, narrow, 0);
@@ -150,7 +150,7 @@ static wchar_t* narrow_to_wide(const char* narrow) {
         return NULL;
     }
 
-    // ���Ȱ���null��ֹ��
+    // 长度包括null终止符
     if (len == 0) {
         setlocale(LC_CTYPE, old_locale);
         free(old_locale);
@@ -163,10 +163,10 @@ static wchar_t* narrow_to_wide(const char* narrow) {
         free(old_locale);
         return NULL;
     }
-    len++; // Ϊnull��ֹ�����ӿռ�
+    len++; // 为null终止符添加空间
 #endif
 
-    // �����ڴ沢ת��
+    // 分配内存并转换
     wchar_t* wide = (wchar_t*)malloc(len * sizeof(wchar_t));
     if (!wide) {
         setlocale(LC_CTYPE, old_locale);
@@ -191,26 +191,26 @@ static wchar_t* narrow_to_wide(const char* narrow) {
     }
 #endif
 
-    // �ָ�ԭʼlocale
+    // 恢复原始locale
     setlocale(LC_CTYPE, old_locale);
     free(old_locale);
     return wide;
 }
 
-// ���ַ�תխ�ַ� (wchar_t -> UTF-8)
+// 宽字符转窄字符 (wchar_t -> UTF-8)
 static char* wide_to_narrow(const wchar_t* wide) {
     if (!wide) return NULL;
 
-    // ���浱ǰlocale
+    // 保存当前locale
     char* old_locale = _strdup(setlocale(LC_CTYPE, NULL));
     if (!old_locale) return NULL;
 
-    // ����UTF-8 locale
+    // 设置UTF-8 locale
     if (!setlocale(LC_CTYPE, "en_US.UTF-8")) {
         setlocale(LC_CTYPE, "");
     }
 
-    // �������賤��
+    // 计算所需长度
     size_t len = 0;
 #ifdef _WIN32
     errno_t err = wcstombs_s(&len, NULL, 0, wide, 0);
@@ -226,10 +226,10 @@ static char* wide_to_narrow(const wchar_t* wide) {
         free(old_locale);
         return NULL;
     }
-    len++; // Ϊnull��ֹ�����ӿռ�
+    len++; // 为null终止符添加空间
 #endif
 
-    // �����ڴ沢ת��
+    // 分配内存并转换
     char* narrow = (char*)malloc(len);
     if (!narrow) {
         setlocale(LC_CTYPE, old_locale);
@@ -254,22 +254,22 @@ static char* wide_to_narrow(const wchar_t* wide) {
     }
 #endif
 
-    // �ָ�ԭʼlocale
+    // 恢复原始locale
     setlocale(LC_CTYPE, old_locale);
     free(old_locale);
     return narrow;
 }
 
-// ================== ����ʵ�� ==================
+// ================== 函数实现 ==================
 
-// ��ʼ�����ö���
+// 初始化配置对象
 void config_init(Config* config) {
     config->pairs = NULL;
     config->count = 0;
     config->capacity = 0;
 }
 
-// �ͷ����ö���
+// 释放配置对象
 void config_free(Config* config) {
     if (!config) return;
 
@@ -283,21 +283,21 @@ void config_free(Config* config) {
     config->capacity = 0;
 }
 
-// UTF-8�ַ����ȼ���
+// UTF-8字符长度计算
 static int utf8_char_len(unsigned char c) {
     if (c < 0x80) return 1;
     if ((c & 0xE0) == 0xC0) return 2;
     if ((c & 0xF0) == 0xE0) return 3;
     if ((c & 0xF8) == 0xF0) return 4;
-    return 1; // ��Ч������Ϊ���ֽڴ���
+    return 1; // 无效序列作为单字节处理
 }
 
-// ��ȷת�崦��
+// 精确转义处理
 static char* parse_value(const char* input) {
     if (!input) return safe_strdup("");
 
     size_t len = strlen(input);
-    // �����㹻�ռ䣨������ÿ���ַ�����Ҫת�壩
+    // 分配足够空间（最坏情况：每个字符都需要转义）
     char* result = (char*)malloc(len * 2 + 1);
     if (!result) return NULL;
 
@@ -308,12 +308,12 @@ static char* parse_value(const char* input) {
         int char_len = utf8_char_len((unsigned char)*p);
 
         if (*p == '\\') {
-            // ����ת������
+            // 处理转义序列
             if (*(p + 1)) {
-                // ����һ���ַ�
+                // 有下一个字符
                 int next_len = utf8_char_len((unsigned char)*(p + 1));
                 if (*(p + 1) == ' ') {
-                    // ��б��+�ո񣺱�������
+                    // 反斜杠+空格：保留两者
                     memcpy(result + j, p, char_len);
                     j += char_len;
                     p += char_len;
@@ -322,26 +322,26 @@ static char* parse_value(const char* input) {
                     p += next_len;
                 }
                 else {
-                    // ����ת���ַ���ֻ����ת�����ַ�
-                    p += char_len; // ������б��
+                    // 其他转义字符：只保留转义后的字符
+                    p += char_len; // 跳过反斜杠
                     memcpy(result + j, p, next_len);
                     j += next_len;
                     p += next_len;
                 }
             }
             else {
-                // ��ĩ������б�ܣ�����
+                // 行末单独反斜杠：保留
                 memcpy(result + j, p, char_len);
                 j += char_len;
                 p += char_len;
             }
         }
         else if (*p == '#') {
-            // δת���#��ע�Ϳ�ʼ
+            // 未转义的#，注释开始
             break;
         }
         else {
-            // ��ͨ�ַ����������ֽ��ַ���
+            // 普通字符（包括多字节字符）
             memcpy(result + j, p, char_len);
             j += char_len;
             p += char_len;
@@ -350,7 +350,7 @@ static char* parse_value(const char* input) {
 
     result[j] = '\0';
 
-    // �޼���β�հ�
+    // 修剪首尾空白
     char* start = result;
     while (isspace((unsigned char)*start)) start++;
 
@@ -358,13 +358,13 @@ static char* parse_value(const char* input) {
     while (end > start && isspace((unsigned char)*end)) end--;
     *(end + 1) = '\0';
 
-    // �����ڴ��˷�
+    // 避免内存浪费
     char* trimmed = safe_strdup(start);
     free(result);
     return trimmed;
 }
 
-// �����Ƿ��Ѵ���
+// 检查键是否已存在
 static int key_exists(const Config* config, const char* key) {
     for (size_t i = 0; i < config->count; i++) {
         if (strcmp(config->pairs[i].key, key) == 0) {
@@ -374,18 +374,18 @@ static int key_exists(const Config* config, const char* key) {
     return 0;
 }
 
-// ���Ӽ�ֵ��
+// 添加键值对
 static int config_add_pair(Config* config, const char* key, const char* raw_value) {
-    // �����Ƿ�Ϊ��
+    // 检查键是否为空
     if (!key || !*key) return 0;
 
-    // �����Ƿ��ظ�
+    // 检查键是否重复
     if (key_exists(config, key)) {
         fprintf(stderr, "Duplicate key error: %s\n", key);
         return 0;
     }
 
-    // ��չ����
+    // 扩展容量
     if (config->count >= config->capacity) {
         size_t new_capacity = config->capacity == 0 ? INITIAL_CAPACITY : config->capacity * 2;
         KeyValuePair* new_pairs = (KeyValuePair*)realloc(config->pairs, new_capacity * sizeof(KeyValuePair));
@@ -397,14 +397,14 @@ static int config_add_pair(Config* config, const char* key, const char* raw_valu
         config->capacity = new_capacity;
     }
 
-    // �����
+    // 分配键
     config->pairs[config->count].key = safe_strdup(key);
     if (!config->pairs[config->count].key) {
         perror("dup_str key failed");
         return 0;
     }
 
-    // ����ֵ
+    // 解析值
     config->pairs[config->count].value = parse_value(raw_value);
     if (!config->pairs[config->count].value) {
         perror("parse_value failed");
@@ -416,7 +416,7 @@ static int config_add_pair(Config* config, const char* key, const char* raw_valu
     return 1;
 }
 
-// ���������ļ�����
+// 解析配置文件内容
 int config_parse(Config* config, const char* content) {
     if (!content) return 0;
 
@@ -433,26 +433,26 @@ int config_parse(Config* config, const char* content) {
     while (token) {
         line_num++;
 
-        // �������к�ע����
+        // 跳过空行和注释行
         if (!*token || *token == '#') {
             token = safe_strtok(NULL, "\n", &saveptr);
             continue;
         }
 
-        // ����ð�ŷָ���
+        // 查找冒号分隔符
         char* colon = strchr(token, ':');
         if (!colon) {
-            // û��ð�ţ�����
+            // 没有冒号，跳过
             token = safe_strtok(NULL, "\n", &saveptr);
             continue;
         }
 
-        // �ָ����ֵ
+        // 分割键和值
         *colon = '\0';
         char* key = token;
         char* value = colon + 1;
 
-        // �޼�������β�հ�
+        // 修剪键的首尾空白
         char* key_end = key + strlen(key) - 1;
         while (key_end > key && isspace((unsigned char)*key_end)) {
             *key_end-- = '\0';
@@ -461,7 +461,7 @@ int config_parse(Config* config, const char* content) {
             key++;
         }
 
-        // ���Ӽ�ֵ��
+        // 添加键值对
         if (!config_add_pair(config, key, value)) {
             free(line);
             return 0;
@@ -476,49 +476,49 @@ int config_parse(Config* config, const char* content) {
 
 char* config_serialize(const Config* config) {
     if (!config || config->count == 0) {
-        return safe_strdup(""); // ���ؿ��ַ���
+        return safe_strdup(""); // 返回空字符串
     }
     
-    // 1. ����������ܳ���
+    // 1. 计算所需的总长度
     size_t total_len = 0;
     for (size_t i = 0; i < config->count; i++) {
-        // ������ + ": " + ֵ���� + "\n"
+        // 键长度 + ": " + 值长度 + "\n"
         total_len += strlen(config->pairs[i].key) + 2 + 
                      strlen(config->pairs[i].value) + 1;
     }
     
-    // 2. �����ڴ棨����ռ����� null ��ֹ����
+    // 2. 分配内存（额外空间用于 null 终止符）
     char* content = (char*)malloc(total_len + 1);
     if (!content) return NULL;
     
-    // 3. ��������
+    // 3. 构建内容
     char* ptr = content;
     for (size_t i = 0; i < config->count; i++) {
-        // ���Ƽ�
+        // 复制键
         size_t key_len = strlen(config->pairs[i].key);
         memcpy(ptr, config->pairs[i].key, key_len);
         ptr += key_len;
         
-        // ���ӷָ���
+        // 添加分隔符
         *ptr++ = ':';
         *ptr++ = ' ';
         
-        // ����ֵ
+        // 复制值
         size_t value_len = strlen(config->pairs[i].value);
         memcpy(ptr, config->pairs[i].value, value_len);
         ptr += value_len;
         
-        // ���ӻ��з�
+        // 添加换行符
         *ptr++ = '\n';
     }
     
-    // 4. ���� null ��ֹ��
+    // 4. 添加 null 终止符
     *ptr = '\0';
     
     return content;
 }
 
-// ���ݼ�����ֵ (UTF-8)
+// 根据键查找值 (UTF-8)
 const char* config_get_value(const Config* config, const char* key) {
     if (!config || !key) return NULL;
 
@@ -530,21 +530,21 @@ const char* config_get_value(const Config* config, const char* key) {
     return NULL;
 }
 
-// �������������ַ���ֵ��ѯ
+// 新增函数：宽字符键值查询
 const wchar_t* wchart_config_get_value(const Config* config, const wchar_t* key) {
     if (!config || !key) return NULL;
 
-    // �����ַ���ת��ΪUTF-8
+    // 将宽字符键转换为UTF-8
     char* utf8_key = NULL;
     {
-        // ����locale����ת��
+        // 设置locale用于转换
         char* old_locale = safe_strdup(setlocale(LC_CTYPE, NULL));
         char* new_locale = setlocale(LC_CTYPE, "en_US.UTF-8");
         if (!new_locale) {
             setlocale(LC_CTYPE, "");
         }
 
-        // �������賤��
+        // 计算所需长度
         size_t len;
 #ifdef _WIN32
         if (wcstombs_s(&len, NULL, 0, key, 0) != 0) {
@@ -559,35 +559,35 @@ const wchar_t* wchart_config_get_value(const Config* config, const wchar_t* key)
         }
 #endif
 
-        // �����ڴ沢ת��
+        // 分配内存并转换
         utf8_key = (char*)malloc(len + 1);
         if (!utf8_key) {
             setlocale(LC_CTYPE, old_locale);
             return NULL;
         }
 
-        // ʹ�ð�ȫת������
+        // 使用安全转换函数
         if (safe_wcstombs(utf8_key, len + 1, key, len) != 0) {
             free(utf8_key);
             setlocale(LC_CTYPE, old_locale);
             return NULL;
         }
 
-        // �ָ�ԭʼlocale
+        // 恢复原始locale
         setlocale(LC_CTYPE, old_locale);
     }
 
-    // ʹ��UTF-8����ѯֵ
+    // 使用UTF-8键查询值
     const char* utf8_value = config_get_value(config, utf8_key);
     free(utf8_key);
 
     if (!utf8_value) return NULL;
 
-    // ��UTF-8ֵת��Ϊ���ַ�
+    // 将UTF-8值转换为宽字符
     return narrow_to_wide(utf8_value);
 }
 
-// �����ļ�������
+// 创建文件锁对象
 FileLock* file_lock_create(const char* file_path) {
     if (!file_path) return NULL;
 
@@ -601,7 +601,7 @@ FileLock* file_lock_create(const char* file_path) {
     }
 
 #ifdef _WIN32
-    // ��UTF-8·��ת��Ϊ���ַ�
+    // 将UTF-8路径转换为宽字符
     int wlen = MultiByteToWideChar(CP_UTF8, 0, file_path, -1, NULL, 0);
     if (wlen == 0) {
         PRINT_ERROR("MultiByteToWideChar failed");
@@ -663,7 +663,7 @@ FileLock* file_lock_create(const char* file_path) {
     return lock;
 }
 
-// �����ļ�
+// 锁定文件
 int file_lock(FileLock* lock) {
     if (!lock || lock->is_locked) return -1;
 
@@ -700,7 +700,7 @@ int file_lock(FileLock* lock) {
     return 0;
 }
 
-// �����ļ�
+// 解锁文件
 int file_unlock(FileLock* lock) {
     if (!lock || !lock->is_locked) return -1;
 
@@ -733,7 +733,7 @@ int file_unlock(FileLock* lock) {
     return 0;
 }
 
-// �����ļ�������
+// 销毁文件锁对象
 void file_lock_destroy(FileLock* lock) {
     if (!lock) return;
 
@@ -755,7 +755,7 @@ void file_lock_destroy(FileLock* lock) {
     free(lock);
 }
 
-// ��ȡ�ļ�����
+// 读取文件内容
 char* file_read_content(FileLock* lock) {
     if (!lock) return NULL;
 
@@ -766,7 +766,7 @@ char* file_read_content(FileLock* lock) {
         return NULL;
     }
 
-    // Ϊ���ܴ��ڵ� BOM ��3�ֽڿռ�
+    // 为可能存在的 BOM 留3字节空间
     char* content = (char*)malloc(size + 4);
     if (!content) return NULL;
 
@@ -777,13 +777,13 @@ char* file_read_content(FileLock* lock) {
         return NULL;
     }
 
-    // ��鲢�Ƴ�UTF-8 BOM
+    // 检查并移除UTF-8 BOM
     if (size >= 3 &&
         (unsigned char)content[0] == 0xEF &&
         (unsigned char)content[1] == 0xBB &&
         (unsigned char)content[2] == 0xBF)
     {
-        // �Ƴ�BOM
+        // 移除BOM
         memmove(content, content + 3, size - 2);
         content[size - 3] = '\0';
     }
@@ -808,13 +808,13 @@ char* file_read_content(FileLock* lock) {
         return NULL;
     }
 
-    // ��鲢�Ƴ�UTF-8 BOM
+    // 检查并移除UTF-8 BOM
     if (st.st_size >= 3 &&
         (unsigned char)content[0] == 0xEF &&
         (unsigned char)content[1] == 0xBB &&
         (unsigned char)content[2] == 0xBF)
     {
-        // �Ƴ�BOM
+        // 移除BOM
         memmove(content, content + 3, st.st_size - 2);
         content[st.st_size - 3] = '\0';
     }
@@ -826,14 +826,14 @@ char* file_read_content(FileLock* lock) {
 #endif
 }
 
-// д���ļ�����
+// 写入文件内容
 int file_write_content(FileLock* lock, const char* content) {
     if (!lock || !content) return -1;
 
     size_t len = strlen(content);
 
 #ifdef _WIN32
-    // �ض��ļ�
+    // 截断文件
     SetFilePointer(lock->handle, 0, NULL, FILE_BEGIN);
     SetEndOfFile(lock->handle);
 
@@ -848,7 +848,7 @@ int file_write_content(FileLock* lock, const char* content) {
         return -1;
     }
 #else
-    // �ض��ļ�
+    // 截断文件
     ftruncate(lock->handle, 0);
 
     if (pwrite(lock->handle, content, len, 0) != (ssize_t)len) {

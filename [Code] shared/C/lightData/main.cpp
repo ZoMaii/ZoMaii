@@ -3,6 +3,8 @@
 int main(int argc, char *argv[]) {
 	// 设置中文环境，确保输出中文字符正常显示
     setlocale(LC_ALL, "zh_CN.UTF-8");
+	SetConsoleOutputCP(CP_UTF8);
+	SetConsoleCP(CP_UTF8);
 
 	// 创建系统占用，没有文件则会自动创建文件
     FileLock* lock = file_lock_create("test.txt");
