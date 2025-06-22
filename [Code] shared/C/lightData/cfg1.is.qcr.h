@@ -66,6 +66,7 @@ void config_init(Config* config);
 void config_free(Config* config);
 int config_parse(Config* config, const char* content);
 const char* config_get_value(const Config* config, const char* key);
+char* config_serialize(const Config* config);
 
 // �������ַ���ѯ����
 const wchar_t* wchart_config_get_value(const Config* config, const wchar_t* key);
@@ -194,6 +195,69 @@ static wchar_t* narrow_to_wide(const char* narrow) {
     setlocale(LC_CTYPE, old_locale);
     free(old_locale);
     return wide;
+}
+
+// ���ַ�תխ�ַ� (wchar_t -> UTF-8)
+static char* wide_to_narrow(const wchar_t* wide) {
+    if (!wide) return NULL;
+
+    // ���浱ǰlocale
+    char* old_locale = _strdup(setlocale(LC_CTYPE, NULL));
+    if (!old_locale) return NULL;
+
+    // ����UTF-8 locale
+    if (!setlocale(LC_CTYPE, "en_US.UTF-8")) {
+        setlocale(LC_CTYPE, "");
+    }
+
+    // �������賤��
+    size_t len = 0;
+#ifdef _WIN32
+    errno_t err = wcstombs_s(&len, NULL, 0, wide, 0);
+    if (err != 0 || len == 0) {
+        setlocale(LC_CTYPE, old_locale);
+        free(old_locale);
+        return NULL;
+    }
+#else
+    len = wcstombs(NULL, wide, 0);
+    if (len == (size_t)-1) {
+        setlocale(LC_CTYPE, old_locale);
+        free(old_locale);
+        return NULL;
+    }
+    len++; // Ϊnull��ֹ�����ӿռ�
+#endif
+
+    // �����ڴ沢ת��
+    char* narrow = (char*)malloc(len);
+    if (!narrow) {
+        setlocale(LC_CTYPE, old_locale);
+        free(old_locale);
+        return NULL;
+    }
+
+#ifdef _WIN32
+    err = wcstombs_s(NULL, narrow, len, wide, _TRUNCATE);
+    if (err != 0) {
+        free(narrow);
+        setlocale(LC_CTYPE, old_locale);
+        free(old_locale);
+        return NULL;
+    }
+#else
+    if (wcstombs(narrow, wide, len) == (size_t)-1) {
+        free(narrow);
+        setlocale(LC_CTYPE, old_locale);
+        free(old_locale);
+        return NULL;
+    }
+#endif
+
+    // �ָ�ԭʼlocale
+    setlocale(LC_CTYPE, old_locale);
+    free(old_locale);
+    return narrow;
 }
 
 // ================== ����ʵ�� ==================
@@ -408,6 +472,50 @@ int config_parse(Config* config, const char* content) {
 
     free(line);
     return 1;
+}
+
+char* config_serialize(const Config* config) {
+    if (!config || config->count == 0) {
+        return safe_strdup(""); // ���ؿ��ַ���
+    }
+    
+    // 1. ����������ܳ���
+    size_t total_len = 0;
+    for (size_t i = 0; i < config->count; i++) {
+        // ������ + ": " + ֵ���� + "\n"
+        total_len += strlen(config->pairs[i].key) + 2 + 
+                     strlen(config->pairs[i].value) + 1;
+    }
+    
+    // 2. �����ڴ棨����ռ����� null ��ֹ����
+    char* content = (char*)malloc(total_len + 1);
+    if (!content) return NULL;
+    
+    // 3. ��������
+    char* ptr = content;
+    for (size_t i = 0; i < config->count; i++) {
+        // ���Ƽ�
+        size_t key_len = strlen(config->pairs[i].key);
+        memcpy(ptr, config->pairs[i].key, key_len);
+        ptr += key_len;
+        
+        // ���ӷָ���
+        *ptr++ = ':';
+        *ptr++ = ' ';
+        
+        // ����ֵ
+        size_t value_len = strlen(config->pairs[i].value);
+        memcpy(ptr, config->pairs[i].value, value_len);
+        ptr += value_len;
+        
+        // ���ӻ��з�
+        *ptr++ = '\n';
+    }
+    
+    // 4. ���� null ��ֹ��
+    *ptr = '\0';
+    
+    return content;
 }
 
 // ���ݼ�����ֵ (UTF-8)
