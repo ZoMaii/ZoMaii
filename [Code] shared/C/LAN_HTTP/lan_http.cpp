@@ -610,7 +610,23 @@ int main(int argc, char* argv[]) {
             // 获取客户端IP
             char client_ip[INET_ADDRSTRLEN];
             inet_ntop(AF_INET, &client_address.sin_addr, client_ip, INET_ADDRSTRLEN);
-            std::cout << "New connection from: " << client_ip << "\n";
+
+            // 读取请求的第一行，提取URL
+            char req_buf[BUFFER_SIZE] = {0};
+            ssize_t req_len = recv(client_socket, req_buf, sizeof(req_buf) - 1, MSG_PEEK);
+            std::string url_path;
+            if (req_len > 0) {
+                std::istringstream iss(req_buf);
+                std::string method, path;
+                iss >> method >> path;
+                url_path = path;
+            }
+
+            std::cout << "New connection from: " << client_ip;
+            if (!url_path.empty()) {
+                std::cout << " To: " << url_path;
+            }
+            std::cout << std::endl;
             
             // 将任务加入线程池
             pool.enqueue([client_socket] {
