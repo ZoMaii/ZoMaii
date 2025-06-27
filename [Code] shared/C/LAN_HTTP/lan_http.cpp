@@ -202,6 +202,34 @@ std::string generate_content_disposition(const std::string& filename) {
     }
 }
 
+// 路径拼接工具
+std::string join_path(const std::string& base, const std::string& sub) {
+#if defined(_WIN32)
+    std::string result = base;
+    if (!result.empty() && result.back() != '\\' && result.back() != '/') {
+        result += '\\';
+    }
+    if (!sub.empty() && (sub.front() == '\\' || sub.front() == '/')) {
+        result += sub.substr(1);
+    } else {
+        result += sub;
+    }
+    std::replace(result.begin(), result.end(), '/', '\\');
+    return result;
+#else
+    std::string result = base;
+    if (!result.empty() && result.back() != '/') {
+        result += '/';
+    }
+    if (!sub.empty() && sub.front() == '/') {
+        result += sub.substr(1);
+    } else {
+        result += sub;
+    }
+    return result;
+#endif
+}
+
 // 发送HTTP响应
 void send_response(SOCKET_HANDLE client_socket, const std::string& status, 
                   const std::string& content_type, const std::string& content,
