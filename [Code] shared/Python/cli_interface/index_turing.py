@@ -1,21 +1,5 @@
-import os, subprocess, sys, re
-
-class Tools:
-    def __init__(self):
-        self.alias = {
-            'h':'help',
-            't':'template',
-            'v':'version'
-        }
-
-    def help(self):
-        print(
-         "This is help info \n"
-        )
-    def version(self):
-        print("20250830-0800 Cor.0 \n")
-    def template(self,parameter:list[str]):
-        print(parameter[0])
+import sys, re
+from Custom_Lib import Tools
 
 class main:
     def __init__(self):
@@ -38,17 +22,21 @@ class main:
 
     def __replace_aliases(self,s:str, alias_dict:dict):
         pattern = re.compile(r'\b(' + '|'.join(re.escape(k) for k in alias_dict.keys()) + r')\b')
-        return pattern.sub(lambda m: alias_dict[m.group(0)], s)
+        return pattern.sub(lambda m: alias_dict[m.group(0)]['cli'], s)
 
     def worker(self,worklist:dict=None):
         if worklist is None:
             worklist = self.worklist
 
+        if worklist == {}:
+            # 无参数介入
+            self.worker({'h':[]})
+
         invalid_chars = []
         for i in worklist:
             char = self.__replace_aliases(i,self.__tools.alias)
             if not hasattr(self.__tools, char) or not callable(getattr(self.__tools, char, None)):
-                    invalid_chars.append(char)
+                    invalid_chars.append(i)
 
         if invalid_chars:
             print(f"index：无 {invalid_chars} 选项可执行，已阻止本次函数执行\n")
@@ -61,3 +49,5 @@ class main:
 
 if __name__ == '__main__':
     main().worker()
+else:
+    print('被动调用是被禁止的行为')
