@@ -9,11 +9,24 @@ class WordManager:
         self.wrong_words = []  # 回答错误的单词
         self.unknown_words = []  # 不知道的单词（空输入）
         self.current_file = ""
+        self.temp_file = "temp_words.json"  # 临时文件名称
         
     def input_mode(self):
-        """录入模式"""
+        """录入模式 - 每输入一个单词就保存到临时文件"""
         print("\n=== 单词录入模式 ===")
         print("输入 'q' 退出录入模式")
+        
+        # 检查是否有临时文件存在
+        if os.path.exists(self.temp_file):
+            load_temp = input("发现未完成的录入临时文件，是否加载? (y/n): ").lower()
+            if load_temp == 'y':
+                try:
+                    with open(self.temp_file, 'r', encoding='utf-8') as f:
+                        temp_data = json.load(f)
+                    self.words = temp_data.get('words', [])
+                    print(f"✓ 已从临时文件加载 {len(self.words)} 个单词")
+                except Exception as e:
+                    print(f"✗ 加载临时文件失败: {e}")
         
         while True:
             word = input("\n单词: ").strip()
@@ -24,20 +37,46 @@ class WordManager:
             meaning = input("意思: ").strip()
             
             if word and pos and meaning:
-                self.words.append({
+                # 添加到内存中的单词列表
+                word_obj = {
                     "word": word,
                     "pos": pos,
-                    "meaning": meaning
-                })
+                    "meaning": meaning,
+                    "added_time": datetime.now().isoformat()
+                }
+                self.words.append(word_obj)
+                
+                # 立即保存到临时文件
+                self.save_to_temp_file()
+                
                 print(f"✓ 已添加: {word}")
             else:
                 print("✗ 输入不完整，请重新输入")
         
         if self.words:
             self.save_to_json()
+            # 保存完成后删除临时文件
+            if os.path.exists(self.temp_file):
+                os.remove(self.temp_file)
+                print("临时文件已删除")
+    
+    def save_to_temp_file(self):
+        """保存到临时文件"""
+        temp_data = {
+            "is_temp": True,
+            "last_updated": datetime.now().isoformat(),
+            "total_words": len(self.words),
+            "words": self.words
+        }
+        
+        try:
+            with open(self.temp_file, 'w', encoding='utf-8') as f:
+                json.dump(temp_data, f, ensure_ascii=False, indent=2)
+        except Exception as e:
+            print(f"✗ 保存临时文件失败: {e}")
     
     def save_to_json(self):
-        """保存到JSON文件"""
+        """保存到正式JSON文件"""
         if not self.words:
             print("没有数据需要保存")
             return
@@ -64,7 +103,7 @@ class WordManager:
     
     def load_from_json(self):
         """从JSON文件加载数据"""
-        json_files = [f for f in os.listdir('.') if f.endswith('.json')]
+        json_files = [f for f in os.listdir('.') if f.endswith('.json') and f != self.temp_file]
         
         if not json_files:
             print("没有找到JSON文件")
@@ -72,7 +111,15 @@ class WordManager:
         
         print("\n可用的JSON文件:")
         for i, file in enumerate(json_files, 1):
-            print(f"{i}. {file}")
+            # 显示文件基本信息
+            try:
+                with open(file, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                word_count = len(data.get('words', []))
+                created_time = data.get('created_time', '未知')
+                print(f"{i}. {file} (单词数: {word_count}, 创建时间: {created_time[:10]})")
+            except:
+                print(f"{i}. {file}")
         
         try:
             choice = int(input("\n选择文件编号: "))
