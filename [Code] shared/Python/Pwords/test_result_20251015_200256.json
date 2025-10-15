@@ -1,0 +1,83 @@
+{
+  "original_file": "day7.json",
+  "test_time": "2025-10-15T20:02:56.697450",
+  "total_words": 30,
+  "correct_count": 20,
+  "wrong_count": 7,
+  "unknown_count": 3,
+  "accuracy": "66.7%",
+  "wrong_words": [
+    {
+      "word": "cross",
+      "pos": "v",
+      "meaning": "穿过，交叉",
+      "test_type": "单词→意思",
+      "user_answer": "穿过"
+    },
+    {
+      "word": "dark",
+      "pos": "a,n",
+      "meaning": "黑暗的，暗处",
+      "test_type": "单词→意思",
+      "user_answer": "黑暗，暗处的"
+    },
+    {
+      "word": "cute",
+      "pos": "a",
+      "meaning": "可爱的，漂亮的",
+      "test_type": "单词→意思",
+      "user_answer": "可爱"
+    },
+    {
+      "word": "decide",
+      "pos": "v",
+      "meaning": "决定",
+      "test_type": "单词→意思",
+      "user_answer": "决策"
+    },
+    {
+      "word": "deep",
+      "pos": "a,ad",
+      "meaning": "深的，深深地",
+      "test_type": "单词→意思",
+      "user_answer": "深的，深度地"
+    },
+    {
+      "word": "cry",
+      "pos": "v,n",
+      "meaning": "哭泣，叫喊",
+      "test_type": "单词→意思",
+      "user_answer": "哭泣，"
+    },
+    {
+      "word": "cut",
+      "pos": "v,n",
+      "meaning": "切，伤口",
+      "test_type": "单词→意思",
+      "user_answer": "切割，伤口"
+    }
+  ],
+  "unknown_words": [
+    {
+      "word": "dialog",
+      "pos": "n",
+      "meaning": "对话，对白",
+      "test_type": "单词→意思",
+      "user_answer": "(不知道)"
+    },
+    {
+      "word": "deaf",
+      "pos": "a",
+      "meaning": "聋的",
+      "test_type": "单词→意思",
+      "user_answer": "(不知道)"
+    },
+    {
+      "word": "crop",
+      "pos": "n",
+      "meaning": "作物，庄稼",
+      "test_type": "单词→意思",
+      "user_answer": "(不知道)"
+    }
+  ]
+}

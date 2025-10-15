@@ -1,0 +1,156 @@
+{
+  "created_time": "2025-10-15T19:49:52.134806",
+  "total_words": 30,
+  "words": [
+    {
+      "word": "crayon",
+      "pos": "n",
+      "meaning": "彩色铅笔"
+    },
+    {
+      "word": "crazy",
+      "pos": "a,n",
+      "meaning": "疯狂的，疯子"
+    },
+    {
+      "word": "crop",
+      "pos": "n",
+      "meaning": "作物，庄稼"
+    },
+    {
+      "word": "cross",
+      "pos": "v",
+      "meaning": "穿过，交叉"
+    },
+    {
+      "word": "crossroads",
+      "pos": "n",
+      "meaning": "十字路口"
+    },
+    {
+      "word": "crowd",
+      "pos": "n,v",
+      "meaning": "人群，拥挤"
+    },
+    {
+      "word": "cry",
+      "pos": "v,n",
+      "meaning": "哭泣，叫喊"
+    },
+    {
+      "word": "cup",
+      "pos": "n",
+      "meaning": "杯子"
+    },
+    {
+      "word": "curry",
+      "pos": "n",
+      "meaning": "咖喱"
+    },
+    {
+      "word": "cut",
+      "pos": "v,n",
+      "meaning": "切，伤口"
+    },
+    {
+      "word": "cute",
+      "pos": "a",
+      "meaning": "可爱的，漂亮的"
+    },
+    {
+      "word": "dance",
+      "pos": "v,n",
+      "meaning": "跳舞，舞蹈"
+    },
+    {
+      "word": "dare",
+      "pos": "v",
+      "meaning": "竟敢"
+    },
+    {
+      "word": "dark",
+      "pos": "a,n",
+      "meaning": "黑暗的，暗处"
+    },
+    {
+      "word": "database",
+      "pos": "n",
+      "meaning": "数据库"
+    },
+    {
+      "word": "date",
+      "pos": "n,v",
+      "meaning": "日期，约会"
+    },
+    {
+      "word": "daughter",
+      "pos": "n",
+      "meaning": "女儿"
+    },
+    {
+      "word": "day",
+      "pos": "n",
+      "meaning": "一天"
+    },
+    {
+      "word": "dead",
+      "pos": "a",
+      "meaning": "死的"
+    },
+    {
+      "word": "deaf",
+      "pos": "a",
+      "meaning": "聋的"
+    },
+    {
+      "word": "deal",
+      "pos": "n",
+      "meaning": "交易"
+    },
+    {
+      "word": "dear",
+      "pos": "a",
+      "meaning": "亲爱的"
+    },
+    {
+      "word": "decide",
+      "pos": "v",
+      "meaning": "决定"
+    },
+    {
+      "word": "deep",
+      "pos": "a,ad",
+      "meaning": "深的，深深地"
+    },
+    {
+      "word": "desk",
+      "pos": "n",
+      "meaning": "桌面"
+    },
+    {
+      "word": "dialog",
+      "pos": "n",
+      "meaning": "对话，对白"
+    },
+    {
+      "word": "dictionary",
+      "pos": "n",
+      "meaning": "字典"
+    },
+    {
+      "word": "die",
+      "pos": "v",
+      "meaning": "死亡"
+    },
+    {
+      "word": "different",
+      "pos": "a",
+      "meaning": "不同的"
+    },
+    {
+      "word": "difficult",
+      "pos": "a",
+      "meaning": "困难的"
+    }
+  ]
+}
