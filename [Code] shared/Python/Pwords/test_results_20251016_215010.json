@@ -1,0 +1,169 @@
+{
+  "test_time": "2025-10-16T21:50:08.303301",
+  "total_questions": 20,
+  "correct_answers": 19,
+  "wrong_answers": 1,
+  "accuracy": 95.0,
+  "details": [
+    {
+      "type": "base",
+      "number": 70,
+      "correct_answer": "seventy",
+      "question": "基数词 70: ",
+      "user_answer": "seventy",
+      "is_correct": true
+    },
+    {
+      "type": "ordinal",
+      "number": 87,
+      "correct_answer": "eighty-seventh",
+      "question": "序数词 第87: ",
+      "user_answer": "eighty-seventh",
+      "is_correct": true
+    },
+    {
+      "type": "base",
+      "number": 5,
+      "correct_answer": "five",
+      "question": "基数词 5: ",
+      "user_answer": "five",
+      "is_correct": true
+    },
+    {
+      "type": "ordinal",
+      "number": 86,
+      "correct_answer": "eighty-sixth",
+      "question": "序数词 第86: ",
+      "user_answer": "eighty-sixth",
+      "is_correct": true
+    },
+    {
+      "type": "ordinal",
+      "number": 24,
+      "correct_answer": "twenty-fourth",
+      "question": "序数词 第24: ",
+      "user_answer": "twenty-fourth",
+      "is_correct": true
+    },
+    {
+      "type": "base",
+      "number": 9,
+      "correct_answer": "nine",
+      "question": "基数词 9: ",
+      "user_answer": "nine",
+      "is_correct": true
+    },
+    {
+      "type": "base",
+      "number": 66,
+      "correct_answer": "sixty-six",
+      "question": "基数词 66: ",
+      "user_answer": "sixty-six",
+      "is_correct": true
+    },
+    {
+      "type": "base",
+      "number": 90,
+      "correct_answer": "ninety",
+      "question": "基数词 90: ",
+      "user_answer": "ninety",
+      "is_correct": true
+    },
+    {
+      "type": "base",
+      "number": 7,
+      "correct_answer": "seven",
+      "question": "基数词 7: ",
+      "user_answer": "seven",
+      "is_correct": true
+    },
+    {
+      "type": "ordinal",
+      "number": 76,
+      "correct_answer": "seventy-sixth",
+      "question": "序数词 第76: ",
+      "user_answer": "seventy-sixth",
+      "is_correct": true
+    },
+    {
+      "type": "base",
+      "number": 37,
+      "correct_answer": "thirty-seven",
+      "question": "基数词 37: ",
+      "user_answer": "thirty-seven",
+      "is_correct": true
+    },
+    {
+      "type": "ordinal",
+      "number": 108,
+      "correct_answer": "one hundred and eighth",
+      "question": "序数词 第108: ",
+      "user_answer": "one hundred and eight",
+      "is_correct": false
+    },
+    {
+      "type": "ordinal",
+      "number": 27,
+      "correct_answer": "twenty-seventh",
+      "question": "序数词 第27: ",
+      "user_answer": "twenty-seventh",
+      "is_correct": true
+    },
+    {
+      "type": "ordinal",
+      "number": 29,
+      "correct_answer": "twenty-ninth",
+      "question": "序数词 第29: ",
+      "user_answer": "twenty-ninth",
+      "is_correct": true
+    },
+    {
+      "type": "ordinal",
+      "number": 67,
+      "correct_answer": "sixty-seventh",
+      "question": "序数词 第67: ",
+      "user_answer": "sixty-seventh",
+      "is_correct": true
+    },
+    {
+      "type": "base",
+      "number": 61,
+      "correct_answer": "sixty-one",
+      "question": "基数词 61: ",
+      "user_answer": "sixty-one",
+      "is_correct": true
+    },
+    {
+      "type": "base",
+      "number": 0,
+      "correct_answer": "zero",
+      "question": "基数词 0: ",
+      "user_answer": "zero",
+      "is_correct": true
+    },
+    {
+      "type": "ordinal",
+      "number": 101,
+      "correct_answer": "one hundred and first",
+      "question": "序数词 第101: ",
+      "user_answer": "one hundred and first",
+      "is_correct": true
+    },
+    {
+      "type": "ordinal",
+      "number": 65,
+      "correct_answer": "sixty-fifth",
+      "question": "序数词 第65: ",
+      "user_answer": "sixty-fifth",
+      "is_correct": true
+    },
+    {
+      "type": "base",
+      "number": 55,
+      "correct_answer": "fifty-five",
+      "question": "基数词 55: ",
+      "user_answer": "fifty-five",
+      "is_correct": true
+    }
+  ]
+}
