@@ -22,13 +22,12 @@ class NumberMonthWeekTester:
         
         # 测试配置
         self.test_config = {
+            "test_mode": "mixed",  # 测试模式: base, ordinal, month, weekday, mixed
             "base_min": 0,
             "base_max": 100,
             "ordinal_min": 1,
             "ordinal_max": 120,
             "question_count": 10,
-            "include_months": True,
-            "include_weekdays": True
         }
     
     def _generate_base_numbers(self):
@@ -59,7 +58,7 @@ class NumberMonthWeekTester:
         return numbers
     
     def _generate_ordinal_numbers(self):
-        """生成1-120的序数词 - 修复了100以上序数词的生成逻辑"""
+        """生成1-120的序数词"""
         ordinal_1_19 = [
             "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth",
             "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth", 
@@ -88,17 +87,15 @@ class NumberMonthWeekTester:
             else:
                 numbers[i] = f"{tens_cardinal[i // 10]}-{ordinal_1_19[i % 10 - 1]}"
         
-        # 100-120 - 修复了这里的逻辑
+        # 100-120
         for i in range(100, 121):
             if i == 100:
                 numbers[i] = "one hundredth"
             elif i < 110:
-                # 101-109: one hundred and first, one hundred and second, etc.
                 numbers[i] = f"one hundred and {ordinal_1_19[i - 100 - 1]}"
             elif i == 110:
                 numbers[i] = "one hundred and tenth"
             elif i < 120:
-                # 111-119: one hundred and eleventh, one hundred and twelfth, etc.
                 numbers[i] = f"one hundred and {ordinal_1_19[i - 100 - 1]}"
             elif i == 120:
                 numbers[i] = "one hundred and twentieth"
@@ -138,58 +135,57 @@ class NumberMonthWeekTester:
         """获取用户测试配置"""
         print("\n=== 测试配置 ===")
         
-        # 基数词范围
-        print("\n基数词测试范围:")
-        self.test_config["base_min"] = int(input("最小数字 (0-99): ") or 0)
-        self.test_config["base_max"] = int(input("最大数字 (1-100): ") or 100)
+        # 选择测试模式
+        print("\n选择测试模式:")
+        print("1. 基数词")
+        print("2. 序数词")
+        print("3. 月份")
+        print("4. 星期")
+        print("5. 混合测试")
         
-        # 序数词范围
-        print("\n序数词测试范围:")
-        self.test_config["ordinal_min"] = int(input("最小数字 (1-119): ") or 1)
-        self.test_config["ordinal_max"] = int(input("最大数字 (2-120): ") or 120)
+        mode_choice = input("请选择测试模式 (1-5): ").strip()
+        mode_map = {
+            "1": "base",
+            "2": "ordinal", 
+            "3": "month",
+            "4": "weekday",
+            "5": "mixed"
+        }
         
-        # 题目数量
+        if mode_choice not in mode_map:
+            print("无效选择，使用默认混合测试")
+            self.test_config["test_mode"] = "mixed"
+        else:
+            self.test_config["test_mode"] = mode_map[mode_choice]
+        
+        # 设置题目数量
         self.test_config["question_count"] = int(input("\n测试题目数量: ") or 10)
         
-        # 是否包含月份和星期
-        include_months = input("\n是否考察月份? (y/n, 默认y): ").lower()
-        self.test_config["include_months"] = include_months != "n"
+        # 根据测试模式设置范围
+        if self.test_config["test_mode"] in ["base", "mixed"]:
+            print("\n基数词测试范围:")
+            self.test_config["base_min"] = int(input("最小数字 (0-99): ") or 0)
+            self.test_config["base_max"] = int(input("最大数字 (1-100): ") or 100)
         
-        include_weekdays = input("是否考察星期? (y/n, 默认y): ").lower()
-        self.test_config["include_weekdays"] = include_weekdays != "n"
+        if self.test_config["test_mode"] in ["ordinal", "mixed"]:
+            print("\n序数词测试范围:")
+            self.test_config["ordinal_min"] = int(input("最小数字 (1-119): ") or 1)
+            self.test_config["ordinal_max"] = int(input("最大数字 (2-120): ") or 120)
     
     def _generate_questions(self):
         """根据配置生成测试题目"""
-        questions = []
+        test_mode = self.test_config["test_mode"]
         
-        # 确定各类题目的数量分布
-        categories = ["base", "ordinal"]
-        if self.test_config["include_months"]:
-            categories.append("month")
-        if self.test_config["include_weekdays"]:
-            categories.append("weekday")
-        
-        # 平均分配题目数量
-        questions_per_category = self.test_config["question_count"] // len(categories)
-        remainder = self.test_config["question_count"] % len(categories)
-        
-        for category in categories:
-            count = questions_per_category
-            if remainder > 0:
-                count += 1
-                remainder -= 1
-            
-            if category == "base":
-                questions.extend(self._generate_base_questions(count))
-            elif category == "ordinal":
-                questions.extend(self._generate_ordinal_questions(count))
-            elif category == "month":
-                questions.extend(self._generate_month_questions(count))
-            elif category == "weekday":
-                questions.extend(self._generate_weekday_questions(count))
-        
-        random.shuffle(questions)
-        return questions
+        if test_mode == "base":
+            return self._generate_base_questions(self.test_config["question_count"])
+        elif test_mode == "ordinal":
+            return self._generate_ordinal_questions(self.test_config["question_count"])
+        elif test_mode == "month":
+            return self._generate_month_questions(self.test_config["question_count"])
+        elif test_mode == "weekday":
+            return self._generate_weekday_questions(self.test_config["question_count"])
+        else:  # mixed
+            return self._generate_mixed_questions(self.test_config["question_count"])
     
     def _generate_base_questions(self, count):
         """生成基数词题目"""
@@ -259,12 +255,40 @@ class NumberMonthWeekTester:
         
         return questions
     
+    def _generate_mixed_questions(self, count):
+        """生成混合测试题目"""
+        questions = []
+        
+        # 计算每种类型的题目数量
+        base_count = count // 4
+        ordinal_count = count // 4
+        month_count = count // 4
+        weekday_count = count - base_count - ordinal_count - month_count
+        
+        # 生成各种类型的题目
+        if base_count > 0:
+            questions.extend(self._generate_base_questions(base_count))
+        
+        if ordinal_count > 0:
+            questions.extend(self._generate_ordinal_questions(ordinal_count))
+        
+        if month_count > 0:
+            questions.extend(self._generate_month_questions(month_count))
+        
+        if weekday_count > 0:
+            questions.extend(self._generate_weekday_questions(weekday_count))
+        
+        # 随机打乱题目顺序
+        random.shuffle(questions)
+        return questions
+    
     def run_test(self):
         """运行测试"""
         self._get_user_config()
         questions = self._generate_questions()
         
         print(f"\n=== 开始测试 ===")
+        print(f"测试模式: {self._get_mode_name(self.test_config['test_mode'])}")
         print(f"共 {len(questions)} 道题目")
         
         correct_count = 0
@@ -289,6 +313,7 @@ class NumberMonthWeekTester:
         # 记录测试结果
         self.test_results = {
             "test_time": datetime.now().isoformat(),
+            "test_mode": self.test_config["test_mode"],
             "total_questions": len(questions),
             "correct_answers": correct_count,
             "wrong_answers": len(questions) - correct_count,
@@ -298,9 +323,21 @@ class NumberMonthWeekTester:
         
         self._show_test_summary()
     
+    def _get_mode_name(self, mode):
+        """获取测试模式名称"""
+        mode_names = {
+            "base": "基数词",
+            "ordinal": "序数词",
+            "month": "月份",
+            "weekday": "星期",
+            "mixed": "混合测试"
+        }
+        return mode_names.get(mode, mode)
+    
     def _show_test_summary(self):
         """显示测试总结"""
         print(f"\n=== 测试完成 ===")
+        print(f"测试模式: {self._get_mode_name(self.test_results['test_mode'])}")
         print(f"正确: {self.test_results['correct_answers']}/{self.test_results['total_questions']}")
         print(f"正确率: {self.test_results['accuracy']}%")
         
@@ -319,6 +356,7 @@ class NumberMonthWeekTester:
         
         print(f"\n=== 统计信息 ===")
         print(f"测试时间: {self.test_results['test_time'][:19]}")
+        print(f"测试模式: {self._get_mode_name(self.test_results['test_mode'])}")
         print(f"总题目数: {self.test_results['total_questions']}")
         print(f"正确率: {self.test_results['accuracy']}%")
         
