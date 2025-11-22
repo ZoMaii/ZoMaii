@@ -1,0 +1,33 @@
+# 正常注释
+a:name
+A:name
+# 带空格的注释（将被视为非法）
+ # 这个注释前面有空格
+路径:/home/test
+adr:C:\User\admin
+
+# 转义测试
+key\:with:colon:value1
+key\\with:backslash:value2
+key\#with:hash:value3
+
+# 重复键测试
+database:host1
+database:host2
+
+# 空值测试（将被视为非法）
+empty_value:
+whitespace_value:   
+
+# 视觉欺骗
+server\:port:8080
+server:port:9090
+
+# 特殊字符
+special:key:normal_value
+unicode_key:路径
+
+# 混合测试
+normal:value
+#normal:commented_value
+ # spaced:comment:illegal
