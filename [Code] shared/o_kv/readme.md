@@ -13,6 +13,6 @@ g++ -std=c++11 -Wall -Wextra -o kv.qis all-in-one.cpp
 4. run it.
 
 # Notes
-This is a rebuild version. Because the open-source(QCR_Framework) file is lost, I can't guarantee that it's OK like before.
+This is a rebuild version. Because the open-source(QCR_Framework) file was lost, I can't guarantee that it's OK like before.
 
 But it can run. <s>emoji also...</s>
